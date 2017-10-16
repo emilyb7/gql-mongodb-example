@@ -4,41 +4,48 @@ const { buildSchema } = require("graphql");
 const mongoose = require("mongoose");
 
 const getLocation = require("./mongoose/queries/get_location");
-mongoose.Promise = global.Promise;
 
-const uri = "mongodb://localhost/gqltest";
+mongoose.Promise = global.Promise; // reset mongoose.promise value
+
+const DB_URI = "mongodb://localhost/gqltest";
 
 const schema = buildSchema(`
 
-
-  type RandomDie {
-    numSides: Int!,
-    rollOnce: Int!,
-    roll(numRolls: Int!): [Int]
+  type Location {
+    id: Int,
+    name: String!,
+    description: String,
+    coordinates: [Float],
+    getLocationName: String,
+    getLocationDescription: String,
+    getLocationCoordinates: String
   }
 
   type Query {
-    hello: String,
-    quote: String,
-    random: Float!,
-    rollThreeDice: [Int],
-    rollDice(numDice: Int!): [Int],
-    getDie(numSides: Int): RandomDie,
+    getLocation(id: Int): Location,
     location(id: Int): String,
   }
 `);
 
-class RandomDie {
-  constructor(numSides) {
-    this.numSides = numSides;
+class Location {
+  constructor(loc) {
+    this.id = loc.id;
+    this.name = loc.name;
+    this.description = loc.description;
+    this.coordinates = loc.coordinates;
   }
 
-  rollOnce() {
-    return 1 + Math.floor(Math.random() * this.numSides);
+  getLocationName() {
+    return this.name;
   }
 
-  roll({ numRolls }) {
-    return Array(numRolls).fill(0).map(() => this.rollOnce());
+  getLocationDescription() {
+    return this.description;
+  }
+
+  getLocationCoordinates() {
+    console.log(this.coordinates);
+    return this.coordinates.join(", ");
   }
 }
 
@@ -47,21 +54,10 @@ const root = {
     return "Hello world";
   },
 
-  quote: () => (Math.random() < 0.5 ? "hello" : "good bye"),
-
-  random: () => Math.random(),
-
-  rollThreeDice: () => [1, 2, 3].map(_ => 1 + Math.floor(Math.random() * 6)),
-
-  rollDice: ({ numDice }) =>
-    Array(numDice).fill(0).map(_ => 1 + Math.floor(Math.random() * 6)),
-
-  getDie: ({ numSides }) => new RandomDie(numSides || 6),
-
-  location: async ({ id }) => {
+  getLocation: async ({ id }) => {
     return await getLocation(id)
       .then(loc => {
-        return loc.description;
+        return new Location(loc);
       })
       .catch(err => {
         console.log(err);
@@ -81,7 +77,7 @@ app.use(
 );
 
 mongoose
-  .connect(uri, {
+  .connect(DB_URI, {
     useMongoClient: true
   })
   .then(db => {
