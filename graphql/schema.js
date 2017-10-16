@@ -6,11 +6,12 @@ module.exports = buildSchema(`
     id: Int,
     name: String!,
     description: String,
-    coordinates: [Float]
+    coordinates: [Float],
+    rating: Int,
   }
 
   type Query {
     getLocation(id: Int): Location,
-    getLocations: [Location]
+    getLocations(rating: Int, geolocation: [Float]): [Location]
   }
 `);

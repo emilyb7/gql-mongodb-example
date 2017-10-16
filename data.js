@@ -6,7 +6,8 @@ const createLocation = locationData => {
     id: locationData.id,
     name: locationData.name,
     description: locationData.description,
-    coordinates: locationData.coordinates
+    loc: { type: "Point", coordinates: locationData.coordinates },
+    rating: locationData.rating
   });
 
   location.save((err, res) => {

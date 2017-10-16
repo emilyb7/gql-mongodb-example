@@ -31,7 +31,7 @@ mongoose
     });
 
     app.listen(4002, () => {
-      //require("./data")();
+      // require("./data")();
       console.log("Running a GraphQL API server at localhost:6666/graphql");
     });
   });

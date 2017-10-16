@@ -18,9 +18,9 @@ module.exports = {
       });
   },
 
-  getLocations: async () => {
+  getLocations: async ({ rating, geolocation }) => {
     return await queries
-      .getLocations()
+      .getLocations(rating || 0, geolocation)
       .then(res => {
         return res.map(loc => new Location(loc));
       })

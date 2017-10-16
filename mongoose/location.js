@@ -6,10 +6,13 @@ const locationSchema = new Schema(
     id: Number,
     name: String,
     description: String,
-    coordinates: [Number]
+    loc: { type: { type: String }, coordinates: [Number] },
+    rating: Number
   },
   { collection: "location" }
 );
+
+locationSchema.index({ loc: "2dsphere" });
 
 const location = mongoose.model("location", locationSchema);
 

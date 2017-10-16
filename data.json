@@ -4,19 +4,22 @@
       "id": 1,
       "name": "Emily's house",
       "description": "The house where I live",
-      "coordinates": [51.4542309, 0.0102456]
+      "coordinates": [51.4542309, 0.0102456],
+      "rating": 5
     },
     {
       "id": 2,
       "name": "Founders & Coders",
       "description": "FAC HQ in Palmers Road, Bethnal Green",
-      "coordinates": [51.5295318, -0.0444889]
+      "coordinates": [51.5295318, -0.0444889],
+      "rating": 5
     },
     {
       "id": 3,
       "name": "The Victoria",
       "description": "The Victoria pub, Grove Road",
-      "coordinates": [51.5290819, -0.0405284]
+      "coordinates": [51.5290819, -0.0405284],
+      "rating": 4
     }
   ]
 }
