@@ -9,6 +9,7 @@ module.exports = {
     await queries
       .getLocation(id)
       .then(loc => {
+        g;
         return new Location(loc);
       })
       .catch(err => {

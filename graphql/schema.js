@@ -1,17 +1,7 @@
 const { buildSchema } = require("graphql");
+const { readFileSync } = require("fs");
+const path = require("path");
 
-module.exports = buildSchema(`
-
-  type Location {
-    id: Int,
-    name: String!,
-    description: String,
-    coordinates: [Float],
-    rating: Int,
-  }
-
-  type Query {
-    getLocation(id: Int): Location,
-    getLocations(rating: Int, geolocation: [Float]): [Location]
-  }
-`);
+module.exports = buildSchema(
+  readFileSync(path.join(__dirname, "schema.graphql"), "utf8")
+);
