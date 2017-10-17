@@ -9,5 +9,5 @@ type Location {
 
 type Query {
   getLocation(id: Int): Location,
-  getLocations(rating: Int, geolocation: [Float], distance: Int): [Location]
+  getLocations(rating: Int, postcode: String, distance: Int): [Location]
 }
