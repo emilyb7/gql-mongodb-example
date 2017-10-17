@@ -1,6 +1,6 @@
 const Location = require("../location");
 
-module.exports = (rating, geolocation) => {
+module.exports = (rating, geolocation, distance) => {
   return new Promise(async (resolve, reject) => {
     try {
       let locations = await Location.aggregate([
@@ -13,7 +13,7 @@ module.exports = (rating, geolocation) => {
                 },
                 distanceField: "distance",
                 spherical: true,
-                maxDistance: 20000
+                maxDistance: distance * 1000
               }
             }
           : {},

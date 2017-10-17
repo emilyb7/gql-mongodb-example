@@ -16,9 +16,9 @@ module.exports = {
         console.log(err);
       }),
 
-  getLocations: async ({ rating, geolocation }) =>
+  getLocations: async ({ rating, geolocation, distance }) =>
     await queries
-      .getLocations(rating || 0, geolocation)
+      .getLocations(rating || 0, geolocation, distance || 5)
       .then(res => {
         return res.map(loc => new Location(loc));
       })

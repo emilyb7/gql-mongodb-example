@@ -4,9 +4,10 @@ type Location {
   description: String,
   coordinates: [Float],
   rating: Int,
+  distance: Float
 }
 
 type Query {
   getLocation(id: Int): Location,
-  getLocations(rating: Int, geolocation: [Float]): [Location]
+  getLocations(rating: Int, geolocation: [Float], distance: Int): [Location]
 }

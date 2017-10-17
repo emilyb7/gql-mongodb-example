@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 mongoose.Promise = global.Promise; // reset mongoose.promise value
 
 const DB_URI = "mongodb://localhost/gqltest";
+const PORT = 4002;
 
 const app = express();
 
@@ -22,15 +23,16 @@ mongoose
     useMongoClient: true
   })
   .then(db => {
-    db.on("error", () => {
-      console.log("---FAILED to connect to mongoose");
-    });
-
     db.once("open", () => {
       console.log("+++Connected to mongoose");
     });
 
-    app.listen(4002, () => {
-      console.log("Running a GraphQL API server at localhost:6666/graphql");
+    app.listen(PORT, () => {
+      console.log(
+        "Running a GraphQL API server at localhost:" + PORT + "/graphql"
+      );
     });
+  })
+  .catch(err => {
+    console.log("failed to connect " + err);
   });
