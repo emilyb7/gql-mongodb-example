@@ -1,7 +1,10 @@
 const Tabletop = require("tabletop");
 const mongoose = require("mongoose");
 
+// these belong in .env
 const DB_URI = "mongodb://localhost/gqltest";
+const SHEETS_URL =
+  "docs.google.com/spreadsheets/d/1gcvnL7wEEnEFPeKngb5Magw1sZfKg4bhr_aBI9F-SUU/edit?usp=sharing";
 
 mongoose.Promise = global.Promise;
 
@@ -9,12 +12,22 @@ const { createLocation, clearLocations } = require("./mongoose/queries/");
 
 const init = cb => {
   Tabletop.init({
-    key:
-      "docs.google.com/spreadsheets/d/1gcvnL7wEEnEFPeKngb5Magw1sZfKg4bhr_aBI9F-SUU/edit?usp=sharing",
+    key: SHEETS_URL,
     callback: cb,
     simpleSheet: true
   });
 };
+
+const getSheetData = () =>
+  new Promise((resolve, reject) => {
+    init(data => {
+      try {
+        resolve(data);
+      } catch (err) {
+        reject(data);
+      }
+    });
+  });
 
 const getCoordinates = url => {
   const coordsRegex = /@\-?[\d\.]+\,\-?[\d\.]+/;
@@ -37,31 +50,16 @@ mongoose
   .connect(DB_URI, {
     useMongoClient: true
   })
-  .then(connection => {
-    return clearLocations()
-      .then(() => Promise.resolve())
-      .catch(err => Promise.reject(err));
-  })
-  .then(result => {
-    return new Promise((res, rej) => {
-      init(data => {
-        if (data) return res(data);
-        rej("error getting data");
-      });
-    });
-  })
-  .then(data => {
-    const promises = data.map(parseData).map(createLocation);
-    return Promise.all(promises)
-      .then(res => {
-        mongoose.disconnect();
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  })
-  .then(done => {
-    console.log("done");
+  .then(async () => {
+    try {
+      await clearLocations();
+      const data = await getSheetData();
+      await Promise.all(data.map(parseData).map(createLocation));
+      await mongoose.disconnect();
+      console.log("done");
+    } catch (err) {
+      throw new Error(err);
+    }
   })
   .catch(err => {
     console.log("err", err);
